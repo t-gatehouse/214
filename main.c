@@ -141,50 +141,54 @@ struct time_spec_t *seconds_to_time_spec( struct num_seconds_t num_seconds ){
 
     struct time_spec_t *ptime_spec, time_spec;
 
-    ptime_spec = (struct time_spec_t*) malloc(6 * sizeof(struct time_spec_t));
+    ptime_spec = (struct time_spec_t*) malloc(100 * sizeof( time_spec));
 
-    printf("\nmemory size for pointer is: %lu\n", sizeof(ptime_spec));
+    ptime_spec->year = (num_seconds.seconds)/31557600;
 
-//    ptime_spec->year = (uint8_t) (num_seconds.seconds)/31557600;
-//    ptime_spec->month;
-//    ptime_spec->day;
-//    ptime_spec->hour;
-//    ptime_spec->minute;
-//    ptime_spec->second;
-//
-//
-//
-//    printf("\nyear: %u should be 1\n", ptr->year);
-//
-//    if (time_spec.year == 1){
-//        time_spec.month = 0;
-//        time_spec.day = 0;
-//        time_spec.hour = 0;
-//        time_spec.minute = 0;
-//        time_spec.second = 0;
-//        printf("\n%uy %un %ud %uh %um %us\n", time_spec.year, time_spec.month, time_spec.day, time_spec.hour, time_spec.minute, time_spec.second);
-//
-//        return ptime_spec;
-//
-//    }
-//
-//    else if(num_seconds.seconds/31557600 > 0){
-//        time_spec.year = num_seconds.seconds/31557600;
-//        time_spec.month = (num_seconds.seconds - 31557600)/2629800;
-//        time_spec.day = (num_seconds.seconds-31557600 - 2629800)/86400;
-//        time_spec.hour = (num_seconds.seconds - 31557600 - 2629800 - 86400)/3600;
-//        time_spec.minute = (num_seconds.seconds - 31557600 - 2629800 - 86400 - 3600)/60;
-//        time_spec.second = (num_seconds.seconds - 31557600 - 2629800 - 86400 - 3600 -60);
-//        printf("\n%uy %un %ud %uh %um %us\n", time_spec.year, time_spec.month, time_spec.day, time_spec.hour, time_spec.minute, time_spec.second);
-//
-//        return ptime_spec;
-//
-//
-//    }
-//
-//    else{
-//        return NULL;
-//    }
+    time_spec.year = ptime_spec->year;
+    ptime_spec->month = 0;
+    ptime_spec->day = 0;
+    ptime_spec->hour = 0;
+    ptime_spec->minute = 0;
+    ptime_spec->second = 0;
+
+
+
+    if (time_spec.year == 1){
+        time_spec.month = ptime_spec->month;
+        time_spec.day = ptime_spec->day;
+        time_spec.hour = ptime_spec->hour;
+        time_spec.minute = ptime_spec->minute;
+        time_spec.second = ptime_spec->second;
+        printf("\n%uy %un %ud %uh %um %us\n", time_spec.year, time_spec.month, time_spec.day, time_spec.hour, time_spec.minute, time_spec.second);
+
+        return ptime_spec;
+
+    }
+
+    else if(num_seconds.seconds/31557600 > 0){
+
+        ptime_spec->year = num_seconds.seconds/31557600;
+        ptime_spec->second = (num_seconds.seconds - 31557600);
+
+
+
+        time_spec.year = ptime_spec->year;
+        time_spec.month = ptime_spec->month;
+        time_spec.day = ptime_spec->day;
+        time_spec.hour = ptime_spec->hour;
+        time_spec.minute = ptime_spec->minute;
+        time_spec.second = ptime_spec->second;
+        printf("\n%uy %un %ud %uh %um %us\n", time_spec.year, time_spec.month, time_spec.day, time_spec.hour, time_spec.minute, time_spec.second);
+
+        return ptime_spec;
+
+
+    }
+
+    else{
+        return NULL;
+    }
 
 
 
@@ -352,11 +356,39 @@ int main(int argc, char *argv[]) {
 
     // ******** testing for seconds to time conversion for in seconds_to_time_spec, designing for edge cases ********
 
+    // testing seconds for a single year
     num_seconds1.seconds = 31557600;
+    ptime_spec1 = seconds_to_time_spec(num_seconds1);
+    if(ptime_spec1->year != 1){
+        ++counter;
+        printf("seconds for 1 year didn't work for seconds_to_time_spec");
+    }
 
-    seconds_to_time_spec(num_seconds1);
+
+    // testing for time greater than 1 year
+    num_seconds1.seconds = 31557601;
+    ptime_spec1 = seconds_to_time_spec(num_seconds1);
+    if(ptime_spec1->year != 1){
+        ++counter;
+        printf("seconds larger than 1 year didn't work for seconds_to_time_spec");
+    }
 
 
+    num_seconds1.seconds = 3333557601;
+    ptime_spec1 = seconds_to_time_spec(num_seconds1);
+    if(ptime_spec1->year != 1){
+        ++counter;
+        printf("seconds much larger than 1 year didn't work for seconds_to_time_spec");
+    }
+
+
+    // testing for null value
+    num_seconds1.seconds = NULL;
+    ptime_spec1 = seconds_to_time_spec(num_seconds1);
+    if(ptime_spec1 != NULL){
+        ++counter;
+        printf("NULL didn't work for seconds_to_time_spec");
+    }
 
 //    // ******** testing print_time_spec ********
 //    print_time_spec(&time_spec);
