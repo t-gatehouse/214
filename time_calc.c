@@ -1,3 +1,9 @@
+// CMPT 214 Assignment 3 time_calc.c
+//
+// Tyler Gatehouse
+// 11211394
+// tyg196
+
 #include <stdint.h>
 #include <stdio.h>
 #include <string.h>
@@ -39,7 +45,6 @@ struct bool is_legal_time_spec(char * time_spec){
 
     // no input returns NULL
     if(time_spec==NULL){
-        printf("There was no input");
         return false;
     }
 
@@ -59,13 +64,11 @@ struct bool is_legal_time_spec(char * time_spec){
                 return true;
             }
             else {
-                printf("The string entered does not conform to time_spec standard, see usage for more detail.");
                 return false;
             }
         }
         // poor input
         else{
-            printf("There was an improper string entered. See usage for more detail.");
             return false;
         }
     }
@@ -87,7 +90,6 @@ struct bool is_legal_seconds(char* seconds){
 
     // checking that input exists
     if(!seconds){
-        printf("There was no input");
         return false;
     }
 
@@ -113,6 +115,7 @@ struct bool is_legal_seconds(char* seconds){
 struct num_seconds_t string_to_seconds(char * seconds) {
     struct bool flag; // boolean structure used to check legality of seconds
     struct num_seconds_t *num_seconds_ptr, num_seconds; // structures used for return
+    unsigned int num;
     num_seconds_ptr = &num_seconds;
 
     // checking legality of input
@@ -122,11 +125,12 @@ struct num_seconds_t string_to_seconds(char * seconds) {
     if(flag.result == 1){
 
         //converting string to num_seconds_t struct
-        sscanf(seconds, "%u", &(*num_seconds_ptr).seconds);
+        sscanf(seconds, "%u", &num);
+        num_seconds_ptr->seconds = num;
         return num_seconds;
 
     }
-    // return nulle
+    // return null
     else{
         // set num_seconds to null
         num_seconds_ptr = NULL;
@@ -160,7 +164,7 @@ struct time_spec_t *string_to_time_spec( char * time_spec){
         ptime->second = (uint8_t) second;
 
 
-        return &time;
+        return ptime;
 
     }
 
@@ -203,7 +207,6 @@ struct time_spec_t *seconds_to_time_spec( struct num_seconds_t num_seconds ){
         if (year <= 100 && month <= 12 && day <= 31 && hour <= 24 && minute <= 60 && second <= 60){
 
             // outputting time_spec
-            printf("\n%uy %un %ud %uh %um %us\n", ptime_spec->year, ptime_spec->month, ptime_spec->day, ptime_spec->hour, ptime_spec->minute, ptime_spec->second);
             return ptime_spec;
         }
 
@@ -301,7 +304,7 @@ struct bool get_time_arg( char *in_str, struct num_seconds_t *seconds_p ){
 /// return: none
 void print_time_spec( struct time_spec_t *time_spec ){
     //output a valid time spec on stdout
-    printf("\n%uy %un %ud %uh %um %us\n", time_spec->year, time_spec->month, time_spec->day, time_spec->hour, time_spec->minute, time_spec->second);
+    printf("%uy %un %ud %uh %um %us\n", time_spec->year, time_spec->month, time_spec->day, time_spec->hour, time_spec->minute, time_spec->second);
 
 }
 
@@ -310,14 +313,14 @@ void print_time_spec( struct time_spec_t *time_spec ){
 /// return: none
 void print_seconds( struct num_seconds_t *num ){
     //output valid seconds on stdout
-    printf("\n%u\n", num->seconds);
+    printf("%u\n", num->seconds);
 
 }
 
 /// subtract_seconds subtracts two strings of seconds and outputs the result in time_spec format
 /// the input is converted prior to usage.
-/// param: *num1: a pointer to a number_of_seconds_t structure
-/// param: *num2: a pointer to a number_of_seconds_t structure
+/// param: *num1: a char pointer to a number_of_seconds_t structure
+/// param: *num2: a char pointer to a number_of_seconds_t structure
 /// return: none
 void subtract_seconds(struct num_seconds_t *num1, struct num_seconds_t *num2){
     struct num_seconds_t num_seconds, *pnum_seconds; // initilzing structure num_seconds to perform operations
@@ -333,8 +336,8 @@ void subtract_seconds(struct num_seconds_t *num1, struct num_seconds_t *num2){
 
 /// add_seconds adds two strings of seconds and outputs the result in time_spec format
 /// the input is converted prior to usage.
-/// param: *num1: a pointer to a number_of_seconds_t structure
-/// param: *num2: a pointer to a number_of_seconds_t structure
+/// param: *num1: a char pointer to a number_of_seconds_t structure
+/// param: *num2: a char pointer to a number_of_seconds_t structure
 /// return: none
 void add_seconds(struct num_seconds_t *num1, struct num_seconds_t *num2){
     struct num_seconds_t num_seconds, *pnum_seconds; // initilzing structure num_seconds to perform operations
@@ -352,21 +355,21 @@ void add_seconds(struct num_seconds_t *num1, struct num_seconds_t *num2){
 /// comp_seconds compares two strings of seconds and outputs
 /// if the time strings are greater than, less than, or equal to one another
 /// the input is converted prior to usage.
-/// param: *num1: a pointer to a number_of_seconds_t structure
-/// param: *num2: a pointer to a number_of_seconds_t structure
+/// param: *num1: a char pointer to a number_of_seconds_t structure
+/// param: *num2: a char pointer to a number_of_seconds_t structure
 /// return: none
 void comp_seconds(struct num_seconds_t *num1, struct num_seconds_t *num2){
     // checking the size of seconds
     if (num1->seconds > num2->seconds){
-        printf("\nGreater");
+        printf("Greater\n");
     }
     // assuring they are not equal
     else if (num1->seconds < num2->seconds){
-        printf("\nLess");
+        printf("Less\n");
     }
     // otherwise input is equal
     else{
-        printf("\nEqual");
+        printf("Equal\n");
     }
 
 
@@ -405,7 +408,7 @@ int main(int argc, char *argv[]) {
 //    char * time_null = NULL;
 //    char * time_spec_string = "100y12n12d23h12m12s";
 //    char * time_spec_string2 = "101y13n13d25h13m13s";
-    char * time_spec_string3 = "0y0n0d0h0m1s";
+//    char * time_spec_string3 = "0y0n0d0h0m1s";
 //    char * string = "tyler";
 //
 //    struct num_seconds_t num_seconds1, *pnum_seconds1, *pnum1, *pnum2, num1, num2;
@@ -553,7 +556,7 @@ int main(int argc, char *argv[]) {
 //    }
 //
     // ******** testing time_spec_to_seconds ********
-    time_spec_to_seconds(time_spec_string3);
+//    time_spec_to_seconds(time_spec_string3);
 //
 //    // ******** testing get_time_arg ********
 //
@@ -631,27 +634,28 @@ int main(int argc, char *argv[]) {
         if(strcmp(argv[1], "conv")==0){
 
             seconds_flag = is_legal_seconds(argv[2]);
-            time_spec_flag = is_legal_seconds(argv[2]);
+            time_spec_flag = is_legal_time_spec(argv[2]);
 
-            if(seconds_flag.result == 1){
+            if (time_spec_flag.result == 1){
+                ptime = string_to_time_spec(argv[2]);
+                num = time_spec_to_seconds(argv[2]);
+                print_seconds(pnum);
+                return 0;
+            }
+
+            else if(seconds_flag.result == 1 && time_spec_flag.result ==0){
                 num = string_to_seconds(argv[2]);
                 ptime = seconds_to_time_spec(num);
                 print_time_spec(ptime);
                 return 0;
             }
 
-            else if (time_spec_flag.result ==1){
-                    ptime = string_to_time_spec(argv[2]);
-                    num = time_spec_to_seconds(ptime);
-                    print_seconds(pnum);
-                    return 0;
-                }
-
             else{
                 usage();
                 return 0;
              }
         }
+
         else{
             usage();
             return 0;
@@ -659,7 +663,7 @@ int main(int argc, char *argv[]) {
 
     }
 
-    else if( argc > 2 && argc < 4 ) {
+    else if( argc > 2 && argc <= 4 ) {
 
         struct bool seconds2, time_spec2;
 
@@ -669,32 +673,31 @@ int main(int argc, char *argv[]) {
         ptime2 = &time2;
 
 
-        seconds_flag = is_legal_seconds(argv[3]);
-        seconds2 = is_legal_seconds(argv[4]);
+        seconds_flag = is_legal_seconds(argv[2]);
+        seconds2 = is_legal_seconds(argv[3]);
 
-        time_spec_flag = is_legal_time_spec(argv[3]);
-        time_spec2 = is_legal_time_spec(argv[4]);
+        time_spec_flag = is_legal_time_spec(argv[2]);
+        time_spec2 = is_legal_time_spec(argv[3]);
 
-        if(seconds_flag.result ==1 && seconds2.result==1){
-            num = string_to_seconds(argv[3]);
-            num2 = string_to_seconds(argv[4]);
-        }
-
-        else if(time_spec_flag.result ==1 && time_spec2.result==1){
-            num = time_spec_to_seconds(argv[3]);
-            num2 = time_spec_to_seconds(argv[4]);
-        }
-
-        else if(seconds_flag.result ==1 && time_spec2.result==1){
-            num = string_to_seconds(argv[3]);
-            num2 = time_spec_to_seconds(argv[4]);
-        }
-
-        else if(seconds2.result ==1 && time_spec_flag.result==1){
-            num = string_to_seconds(argv[4]);
+        if(time_spec_flag.result ==1 && time_spec2.result==1){
+            num = time_spec_to_seconds(argv[2]);
             num2 = time_spec_to_seconds(argv[3]);
         }
 
+        else if(seconds_flag.result ==1 && time_spec2.result==1 && time_spec_flag.result ==0){
+            num = string_to_seconds(argv[2]);
+            num2 = time_spec_to_seconds(argv[3]);
+        }
+
+        else if(seconds2.result ==1 && time_spec_flag.result==1 && time_spec2.result==0){
+            num = string_to_seconds(argv[2]);
+            num2 = time_spec_to_seconds(argv[3]);
+        }
+
+        else if(seconds_flag.result ==1 && seconds2.result==1 && time_spec_flag.result==0 && time_spec2.result==0){
+            num = string_to_seconds(argv[2]);
+            num2 = string_to_seconds(argv[3]);
+        }
 
         if(strcmp(argv[1], "subt")==0){
             subtract_seconds(pnum, pnum2);
@@ -705,17 +708,18 @@ int main(int argc, char *argv[]) {
         }
 
         else if ((strcmp(argv[1], "comp")==0)){
+
             comp_seconds(pnum, pnum2);
         }
 
-        else{
-            usage();
-            return 0;
-        }
-
     }
+
+    else if((strcmp(argv[1], "help")==0)) {
+        usage();
+        return 0;
+    }
+
     else {
-       usage();
        return 0;
     }
 
